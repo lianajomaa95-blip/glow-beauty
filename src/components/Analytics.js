@@ -1,19 +1,17 @@
 // src/components/Analytics.js
 //
-// Loads:
-//   - Google Analytics 4 (page views + custom events)
-//   - Facebook Pixel (advertising, optional)
-//   - LinkedIn Insight Tag (advertising, optional)
-//
+// Loads Google Analytics 4 for tracking page views and custom events.
 // Only activates in production (skips localhost).
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// 👉 REPLACE WITH YOUR ACTUAL IDs
-const GA_MEASUREMENT_ID = "G-DS4XJJGZZ9"; // From Google Analytics
-const FB_PIXEL_ID = ""; // Optional: from Facebook Business Manager
-const LINKEDIN_PARTNER_ID = ""; // Optional: from LinkedIn Campaign Manager
+// 👉 YOUR REAL MEASUREMENT ID
+const GA_MEASUREMENT_ID = "G-DS4XJJGZZ9";
+
+// Optional pixels (leave empty if not using)
+const FB_PIXEL_ID = "";
+const LINKEDIN_PARTNER_ID = "";
 
 const IS_PROD = process.env.NODE_ENV === "production";
 
@@ -25,7 +23,7 @@ export default function Analytics() {
     if (!IS_PROD) return;
 
     /* ============ GOOGLE ANALYTICS 4 ============ */
-   if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== "G-XXXXXXXXXX") { {
+    if (GA_MEASUREMENT_ID) {
       const gaScript = document.createElement("script");
       gaScript.async = true;
       gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -43,11 +41,9 @@ export default function Analytics() {
         });
       `;
       document.head.appendChild(gaInit);
-    } else {
-      console.warn("📊 Analytics: GA_MEASUREMENT_ID not set");
     }
 
-    /* ============ FACEBOOK PIXEL ============ */
+    /* ============ FACEBOOK PIXEL (optional) ============ */
     if (FB_PIXEL_ID) {
       const fbScript = document.createElement("script");
       fbScript.innerHTML = `
@@ -65,7 +61,7 @@ export default function Analytics() {
       document.head.appendChild(fbScript);
     }
 
-    /* ============ LINKEDIN INSIGHT TAG ============ */
+    /* ============ LINKEDIN INSIGHT TAG (optional) ============ */
     if (LINKEDIN_PARTNER_ID) {
       const liScript = document.createElement("script");
       liScript.innerHTML = `
@@ -90,14 +86,12 @@ export default function Analytics() {
   useEffect(() => {
     if (!IS_PROD) return;
 
-    // GA4 page view
     if (typeof window.gtag === "function") {
       window.gtag("config", GA_MEASUREMENT_ID, {
         page_path: location.pathname + location.search,
       });
     }
 
-    // Facebook Pixel page view
     if (typeof window.fbq === "function") {
       window.fbq("track", "PageView");
     }
