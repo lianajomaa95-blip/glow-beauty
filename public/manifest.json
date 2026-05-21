@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "GlowSkin",
+  "name": "GlowSkin — Curated Luxury Skincare",
+  "description": "Discover curated luxury skincare from Avène and La Roche-Posay. Dermatologist-approved formulas for every skin type.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,20 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#c2687a",
+  "background_color": "#fff5f7",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "beauty", "lifestyle"]
 }
