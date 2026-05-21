@@ -18,7 +18,9 @@ export default function Contact() {
       const response = await fetch("https://formspree.io/f/xrerdnwe", {
         method: "POST",
         body: formData,
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+        },
       });
 
       if (response.ok) {
@@ -44,7 +46,8 @@ export default function Contact() {
 
       <div style={mainContent}>
         <div style={cardsGrid}>
-          
+          {/* WhatsApp */}
+          <a
             href="https://wa.me/96176809185"
             target="_blank"
             rel="noreferrer"
@@ -55,13 +58,18 @@ export default function Contact() {
             <span style={cardSub}>Chat with us</span>
           </a>
 
-          <a href="mailto:lianajomaa95@gmail.com" style={contactCard}>
+          {/* Email */}
+          <a
+            href="mailto:lianajomaa95@gmail.com"
+            style={contactCard}
+          >
             <FaEnvelope style={{ fontSize: 32, color: "#c2687a" }} />
             <span style={cardTitle}>Email</span>
             <span style={cardSub}>Send a message</span>
           </a>
 
-          
+          {/* Instagram */}
+          <a
             href="https://instagram.com"
             target="_blank"
             rel="noreferrer"
@@ -77,11 +85,18 @@ export default function Contact() {
           {sent ? (
             <div style={successBox}>
               <div style={successIcon}>✓</div>
+
               <h2 style={successTitle}>Message Sent!</h2>
+
               <p style={successText}>
-                Thanks for reaching out — we'll get back to you within 24 hours.
+                Thanks for reaching out — we'll get back to you within 24
+                hours.
               </p>
-              <button onClick={() => setSent(false)} style={resetBtn}>
+
+              <button
+                onClick={() => setSent(false)}
+                style={resetBtn}
+              >
                 Send Another
               </button>
             </div>
@@ -97,6 +112,7 @@ export default function Contact() {
                     required
                     style={input}
                   />
+
                   <input
                     name="email"
                     type="email"
@@ -122,7 +138,15 @@ export default function Contact() {
 
                 {error && <p style={errorText}>{error}</p>}
 
-                <button type="submit" disabled={submitting} style={submitBtn}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    ...submitBtn,
+                    opacity: submitting ? 0.7 : 1,
+                    cursor: submitting ? "not-allowed" : "pointer",
+                  }}
+                >
                   {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
@@ -185,6 +209,7 @@ const contactCard = {
   border: "1px solid rgba(194,104,122,0.15)",
   textDecoration: "none",
   cursor: "pointer",
+  transition: "0.2s ease",
 };
 
 const cardTitle = {
@@ -265,7 +290,6 @@ const submitBtn = {
   fontSize: 15,
   fontWeight: 600,
   marginTop: 6,
-  cursor: "pointer",
 };
 
 const successBox = {
