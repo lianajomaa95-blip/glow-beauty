@@ -380,7 +380,6 @@ const item = {
   padding: "12px 0",
   cursor: "pointer",
   fontSize: 14,
-  borderBottom: `1px solid ${theme.colors.border}`,
   color: theme.colors.dark,
   background: "transparent",
   border: "none",
