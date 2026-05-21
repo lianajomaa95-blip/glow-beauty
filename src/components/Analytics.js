@@ -25,7 +25,7 @@ export default function Analytics() {
     if (!IS_PROD) return;
 
     /* ============ GOOGLE ANALYTICS 4 ============ */
-    if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== "G-DS4XJJGZZ9") {
+   if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== "G-XXXXXXXXXX") { {
       const gaScript = document.createElement("script");
       gaScript.async = true;
       gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
