@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // 👉 REPLACE WITH YOUR ACTUAL IDs
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX"; // From Google Analytics
+const GA_MEASUREMENT_ID = "G-DS4XJJGZZ9"; // From Google Analytics
 const FB_PIXEL_ID = ""; // Optional: from Facebook Business Manager
 const LINKEDIN_PARTNER_ID = ""; // Optional: from LinkedIn Campaign Manager
 
@@ -25,7 +25,7 @@ export default function Analytics() {
     if (!IS_PROD) return;
 
     /* ============ GOOGLE ANALYTICS 4 ============ */
-    if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== "G-XXXXXXXXXX") {
+    if (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID !== "G-DS4XJJGZZ9") {
       const gaScript = document.createElement("script");
       gaScript.async = true;
       gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
