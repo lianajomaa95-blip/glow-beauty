@@ -72,7 +72,6 @@ export default function Checkout({ cart = [], clearCart }) {
     setAppliedPromo({ code, ...found });
     setPromoInput("");
 
-    // 📊 Track promo application
     const discountAmount =
       found.type === "percent" ? (subtotal * found.value) / 100 : 10;
     trackApplyPromo(code, discountAmount);
@@ -115,10 +114,7 @@ export default function Checkout({ cart = [], clearCart }) {
 
   const handleCheckout = () => {
     if (!validateForm()) return;
-
-    // 📊 Track beginning of checkout
     trackBeginCheckout(cart, appliedPromo?.code);
-
     setLoading(true);
 
     setTimeout(() => {
@@ -151,7 +147,6 @@ export default function Checkout({ cart = [], clearCart }) {
         JSON.stringify([order, ...existingOrders])
       );
 
-      // 📊 Track successful purchase
       trackPurchase(order);
 
       if (typeof clearCart === "function") clearCart();
@@ -238,10 +233,12 @@ export default function Checkout({ cart = [], clearCart }) {
   }
 
   return (
-    <div style={page}>
+    <div style={page} className="checkout-page">
       <div style={container} className="checkout-grid">
-        <div style={left}>
-          <h1 style={title}>Secure Checkout</h1>
+        <div style={left} className="checkout-left">
+          <h1 style={title} className="checkout-title">
+            Secure Checkout
+          </h1>
           <p style={subtitle}>Complete your order</p>
 
           <div style={section}>
@@ -267,7 +264,7 @@ export default function Checkout({ cart = [], clearCart }) {
 
             <input
               name="phone"
-              placeholder="Phone Number (for delivery)"
+              placeholder="Phone Number"
               value={form.phone}
               onChange={handleChange}
               style={{ ...input, marginTop: 14 }}
@@ -309,7 +306,7 @@ export default function Checkout({ cart = [], clearCart }) {
               >
                 <div style={methodIcon}>📦</div>
                 <div style={methodName}>Cash on Delivery</div>
-                <div style={methodHint}>+$2 handling fee</div>
+                <div style={methodHint}>+$2 fee</div>
               </div>
               <div
                 onClick={() => setPaymentMethod("whish")}
@@ -317,7 +314,7 @@ export default function Checkout({ cart = [], clearCart }) {
               >
                 <div style={methodIcon}>📱</div>
                 <div style={methodName}>Whish Money</div>
-                <div style={methodHint}>Pay via Whish app</div>
+                <div style={methodHint}>Via Whish app</div>
               </div>
               <div
                 onClick={() => setPaymentMethod("card")}
@@ -325,7 +322,7 @@ export default function Checkout({ cart = [], clearCart }) {
               >
                 <div style={methodIcon}>💳</div>
                 <div style={methodName}>Credit Card</div>
-                <div style={methodHint}>Visa / Mastercard</div>
+                <div style={methodHint}>Visa / MC</div>
               </div>
             </div>
 
@@ -334,8 +331,7 @@ export default function Checkout({ cart = [], clearCart }) {
                 💵 <strong>Cash on Delivery</strong>
                 <p style={noteText}>
                   Pay <strong>${total.toFixed(2)}</strong> in cash when our
-                  courier delivers your order. Make sure your phone number is
-                  correct — we'll call before arrival.
+                  courier delivers your order.
                 </p>
               </div>
             )}
@@ -347,13 +343,12 @@ export default function Checkout({ cart = [], clearCart }) {
                   <p style={noteText}>
                     After placing your order, send{" "}
                     <strong>${total.toFixed(2)}</strong> via Whish to{" "}
-                    <strong>+961 71 234 567</strong> with reference:{" "}
-                    <strong>your order number</strong>.
+                    <strong>+961 71 234 567</strong>.
                   </p>
                 </div>
                 <input
                   name="whishPhone"
-                  placeholder="Your Whish Phone Number"
+                  placeholder="Your Whish Phone"
                   value={form.whishPhone}
                   onChange={handleChange}
                   style={{ ...input, marginTop: 14 }}
@@ -365,7 +360,7 @@ export default function Checkout({ cart = [], clearCart }) {
               <div style={{ marginTop: 14 }}>
                 <input
                   name="card"
-                  placeholder="Card Number (e.g., 4242 4242 4242 4242)"
+                  placeholder="Card Number"
                   value={form.card}
                   onChange={handleChange}
                   style={input}
@@ -402,7 +397,9 @@ export default function Checkout({ cart = [], clearCart }) {
                   <p style={itemName}>{item.name}</p>
                   <p style={itemQty}>Qty: {item.qty}</p>
                 </div>
-                <strong>${(item.price * item.qty).toFixed(2)}</strong>
+                <strong style={{ flexShrink: 0, fontSize: 14 }}>
+                  ${(item.price * item.qty).toFixed(2)}
+                </strong>
               </div>
             ))}
           </div>
@@ -412,7 +409,7 @@ export default function Checkout({ cart = [], clearCart }) {
 
             {appliedPromo ? (
               <div style={appliedPromoBox}>
-                <div>
+                <div style={{ minWidth: 0, flex: 1 }}>
                   <strong>{appliedPromo.code}</strong>
                   <div style={promoLabel}>{appliedPromo.label}</div>
                 </div>
@@ -436,7 +433,7 @@ export default function Checkout({ cart = [], clearCart }) {
                 {promoError && <div style={promoErrorText}>{promoError}</div>}
                 <div style={promoHint}>
                   Try: <code style={code}>GLOW10</code>,{" "}
-                  <code style={code}>WELCOME20</code>, or{" "}
+                  <code style={code}>WELCOME20</code>,{" "}
                   <code style={code}>FREESHIP</code>
                 </div>
               </div>
@@ -468,16 +465,7 @@ export default function Checkout({ cart = [], clearCart }) {
               </div>
             )}
 
-            <div
-              style={{
-                ...totalRow,
-                fontSize: 18,
-                fontWeight: 700,
-                marginTop: 10,
-                borderTop: `1px solid ${theme.colors.border}`,
-                paddingTop: 12,
-              }}
-            >
+            <div style={totalFinal}>
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>
@@ -495,29 +483,47 @@ export default function Checkout({ cart = [], clearCart }) {
             {loading
               ? "Processing..."
               : paymentMethod === "cod"
-              ? `Place Order — Pay $${total.toFixed(2)} on Delivery`
+              ? `Place Order — $${total.toFixed(2)}`
               : paymentMethod === "whish"
-              ? `Confirm Whish Order — $${total.toFixed(2)}`
+              ? `Confirm Order — $${total.toFixed(2)}`
               : `Pay $${total.toFixed(2)}`}
           </button>
 
-          <p style={secureNote}>
-            🔒 Demo checkout — no real payment will be processed
-          </p>
+          <p style={secureNote}>🔒 Demo checkout — no real payment</p>
         </div>
       </div>
 
+      {/* 📱 BULLETPROOF MOBILE STYLES */}
       <style>{`
         @media (max-width: 900px) {
+          .checkout-page {
+            padding: 16px 12px !important;
+          }
           .checkout-grid {
             grid-template-columns: 1fr !important;
-            gap: 20px !important;
+            gap: 16px !important;
+          }
+          .checkout-left {
+            padding: 18px !important;
           }
           .checkout-summary {
             position: static !important;
+            padding: 18px !important;
           }
           .checkout-row {
             grid-template-columns: 1fr !important;
+          }
+          .checkout-title {
+            font-size: 24px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .checkout-page {
+            padding: 12px 8px !important;
+          }
+          .checkout-left, .checkout-summary {
+            padding: 14px !important;
+            border-radius: 12px !important;
           }
         }
       `}</style>
@@ -547,7 +553,7 @@ const left = {
   padding: 30,
 };
 
-const title = { fontSize: 34, color: theme.colors.dark };
+const title = { fontSize: 34, color: theme.colors.dark, margin: 0 };
 const subtitle = { color: theme.colors.muted, marginTop: 6 };
 const section = { marginTop: 30 };
 const sectionTitle = { marginBottom: 16, color: theme.colors.dark };
@@ -572,14 +578,14 @@ const input = {
 
 const methodsRow = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-  gap: 12,
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: 8,
   marginBottom: 18,
 };
 
 const methodCard = (active) => ({
-  padding: "16px 12px",
-  borderRadius: 14,
+  padding: "14px 8px",
+  borderRadius: 12,
   border: `2px solid ${active ? theme.colors.primary : theme.colors.border}`,
   background: active ? "rgba(194,104,122,0.08)" : theme.colors.inputBg,
   cursor: "pointer",
@@ -587,9 +593,9 @@ const methodCard = (active) => ({
   transition: "0.2s ease",
 });
 
-const methodIcon = { fontSize: 26, marginBottom: 6 };
-const methodName = { fontSize: 13, fontWeight: 600, color: theme.colors.dark };
-const methodHint = { fontSize: 11, color: theme.colors.muted, marginTop: 4 };
+const methodIcon = { fontSize: 22, marginBottom: 6 };
+const methodName = { fontSize: 11, fontWeight: 600, color: theme.colors.dark };
+const methodHint = { fontSize: 10, color: theme.colors.muted, marginTop: 2 };
 
 const noteBox = {
   background: "#fff8ed",
@@ -611,20 +617,25 @@ const summary = {
   top: 100,
 };
 
-const summaryTitle = { marginBottom: 20, color: theme.colors.dark };
-const items = { display: "flex", flexDirection: "column", gap: 16 };
-const itemRow = { display: "flex", gap: 12, alignItems: "center" };
+const summaryTitle = { marginBottom: 20, color: theme.colors.dark, fontSize: 18 };
+const items = { display: "flex", flexDirection: "column", gap: 14 };
+
+const itemRow = {
+  display: "flex",
+  gap: 10,
+  alignItems: "center",
+};
 
 const itemImage = {
-  width: 64,
-  height: 64,
+  width: 50,
+  height: 50,
   objectFit: "cover",
-  borderRadius: 12,
+  borderRadius: 10,
   flexShrink: 0,
 };
 
 const itemName = {
-  fontSize: 14,
+  fontSize: 13,
   fontWeight: 600,
   margin: 0,
   color: theme.colors.dark,
@@ -633,7 +644,7 @@ const itemName = {
   whiteSpace: "nowrap",
 };
 
-const itemQty = { fontSize: 12, color: theme.colors.muted, margin: 0 };
+const itemQty = { fontSize: 11, color: theme.colors.muted, margin: 0 };
 
 const promoSection = {
   marginTop: 24,
@@ -642,7 +653,11 @@ const promoSection = {
 };
 
 const promoTitle = { fontSize: 14, marginBottom: 10, color: theme.colors.dark };
-const promoInputRow = { display: "flex", gap: 8 };
+
+const promoInputRow = {
+  display: "flex",
+  gap: 8,
+};
 
 const promoInputStyle = {
   flex: 1,
@@ -659,25 +674,32 @@ const promoInputStyle = {
 };
 
 const applyBtn = {
-  padding: "10px 16px",
+  padding: "10px 14px",
   background: theme.colors.primary,
   color: "#fff",
   border: "none",
   borderRadius: 10,
   cursor: "pointer",
   fontWeight: 600,
-  fontSize: 13,
+  fontSize: 12,
   whiteSpace: "nowrap",
+  flexShrink: 0,
 };
 
 const promoErrorText = { color: "#c33", fontSize: 12, marginTop: 8 };
-const promoHint = { fontSize: 11, color: theme.colors.muted, marginTop: 8 };
+
+const promoHint = {
+  fontSize: 11,
+  color: theme.colors.muted,
+  marginTop: 8,
+  lineHeight: 1.6,
+};
 
 const code = {
   background: theme.colors.inputBg,
-  padding: "2px 6px",
+  padding: "2px 5px",
   borderRadius: 4,
-  fontSize: 11,
+  fontSize: 10,
 };
 
 const appliedPromoBox = {
@@ -688,6 +710,7 @@ const appliedPromoBox = {
   background: "#d7f5df",
   borderRadius: 10,
   color: "#1d8a3f",
+  gap: 10,
 };
 
 const promoLabel = { fontSize: 11, marginTop: 2 };
@@ -698,31 +721,44 @@ const removePromoBtn = {
   color: "#1d8a3f",
   cursor: "pointer",
   fontSize: 16,
+  flexShrink: 0,
 };
 
 const totals = {
-  marginTop: 24,
+  marginTop: 20,
   borderTop: `1px solid ${theme.colors.border}`,
-  paddingTop: 18,
+  paddingTop: 16,
 };
 
 const totalRow = {
   display: "flex",
   justifyContent: "space-between",
-  marginBottom: 10,
+  marginBottom: 8,
+  fontSize: 14,
   color: theme.colors.text,
 };
 
+const totalFinal = {
+  display: "flex",
+  justifyContent: "space-between",
+  fontSize: 18,
+  fontWeight: 700,
+  marginTop: 12,
+  borderTop: `1px solid ${theme.colors.border}`,
+  paddingTop: 12,
+  color: theme.colors.dark,
+};
+
 const checkoutBtn = {
-  marginTop: 24,
+  marginTop: 20,
   width: "100%",
-  padding: "15px",
-  borderRadius: 14,
+  padding: "16px",
+  borderRadius: 12,
   border: "none",
   background: theme.colors.primary,
   color: "#fff",
   fontWeight: 600,
-  fontSize: 15,
+  fontSize: 14,
   transition: "0.3s ease",
 };
 
@@ -744,8 +780,8 @@ const successPage = {
 
 const successCard = {
   background: theme.colors.card,
-  padding: "50px 40px",
-  borderRadius: 28,
+  padding: "40px 28px",
+  borderRadius: 24,
   textAlign: "center",
   maxWidth: 480,
   width: "100%",
@@ -753,21 +789,21 @@ const successCard = {
 };
 
 const successIcon = {
-  width: 90,
-  height: 90,
+  width: 80,
+  height: 80,
   borderRadius: "50%",
   background: "#d7f5df",
   color: "#27ae60",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 40,
-  margin: "0 auto 24px",
+  fontSize: 36,
+  margin: "0 auto 20px",
   fontWeight: "700",
 };
 
 const successTitle = {
-  fontSize: 30,
+  fontSize: 26,
   marginBottom: 10,
   color: theme.colors.dark,
 };
@@ -776,6 +812,7 @@ const successText = {
   color: theme.colors.muted,
   marginBottom: 24,
   lineHeight: 1.6,
+  fontSize: 14,
 };
 
 const orderDetailsBox = {
@@ -790,19 +827,21 @@ const detailRow = {
   display: "flex",
   justifyContent: "space-between",
   padding: "6px 0",
-  fontSize: 14,
+  fontSize: 13,
   color: theme.colors.text,
+  gap: 10,
 };
 
-const detailLabel = { color: theme.colors.muted };
+const detailLabel = { color: theme.colors.muted, flexShrink: 0 };
 
 const successBtn = {
-  padding: "15px 24px",
-  borderRadius: 14,
+  padding: "14px 24px",
+  borderRadius: 12,
   border: "none",
   background: theme.colors.primary,
   color: "#fff",
   fontWeight: "600",
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
+  width: "100%",
 };
