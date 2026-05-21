@@ -29,6 +29,7 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Contact from "./pages/Contact";
 import SkinQuiz from "./pages/SkinQuiz";
+import QuizResults from "./pages/QuizResults";
 import Recommendations from "./pages/Recommendations";
 import RoutineBuilder from "./pages/RoutineBuilder";
 import SkinCoach from "./pages/SkinCoach";
@@ -90,7 +91,6 @@ export default function App() {
   }, [wishlist]);
 
   const addToCart = (product) => {
-    // 📊 TRACK EVENT
     trackAddToCart(product, 1);
 
     setCart((prev) => {
@@ -108,7 +108,6 @@ export default function App() {
   };
 
   const removeFromCart = (id) => {
-    // 📊 TRACK EVENT (find product first for analytics)
     const product = cart.find((i) => i.id === id);
     if (product) trackRemoveFromCart(product, product.qty || 1);
 
@@ -135,7 +134,6 @@ export default function App() {
         triggerToast("Removed from wishlist 💔");
         return prev.filter((p) => p.id !== product.id);
       }
-      // 📊 TRACK EVENT (only on add, not remove)
       trackAddToWishlist(product);
       triggerToast("Added to wishlist ❤️");
       return [...prev, product];
@@ -245,6 +243,10 @@ export default function App() {
           <Route
             path="/skin-quiz"
             element={<SkinQuiz setRecommended={setRecommended} />}
+          />
+          <Route
+            path="/quiz-results"
+            element={<QuizResults addToCart={addToCart} />}
           />
           <Route
             path="/recommendations"
