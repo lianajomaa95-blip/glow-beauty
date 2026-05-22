@@ -2,11 +2,12 @@
 //
 // Loads Google Analytics 4 for tracking page views and custom events.
 // Only activates in production (skips localhost).
+// Aura Store analytics.
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// 👉 YOUR REAL MEASUREMENT ID
+// 👉 YOUR MEASUREMENT ID (already filled in)
 const GA_MEASUREMENT_ID = "G-DS4XJJGZZ9";
 
 // Optional pixels (leave empty if not using)
@@ -41,6 +42,8 @@ export default function Analytics() {
         });
       `;
       document.head.appendChild(gaInit);
+    } else {
+      console.warn("[Aura Store Analytics] GA_MEASUREMENT_ID not set");
     }
 
     /* ============ FACEBOOK PIXEL (optional) ============ */

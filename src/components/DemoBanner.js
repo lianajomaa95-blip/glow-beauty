@@ -1,14 +1,10 @@
 // src/components/DemoBanner.js
-//
-// Subtle banner at the top of the site indicating this is a portfolio
-// demo project. Users can dismiss it, and the dismissal is remembered.
 
 import { useState, useEffect } from "react";
 
 export default function DemoBanner() {
   const [visible, setVisible] = useState(false);
 
-  // Check localStorage to see if user dismissed it before
   useEffect(() => {
     const dismissed = localStorage.getItem("demo_banner_dismissed");
     if (!dismissed) {
@@ -25,86 +21,43 @@ export default function DemoBanner() {
 
   return (
     <div style={banner}>
-      <div style={inner}>
-        <span style={icon}>✨</span>
-
-        <span style={text}>
-          <strong>Demo Project:</strong> This is a portfolio demo built with{" "}
-          <strong>React + Shopify Storefront API</strong>. Products, prices,
-          and brand displays are for demonstration only — no real orders are
-          processed.
-        </span>
-
-        <a
-          href="https://github.com/yourusername/glow-beauty"
-          target="_blank"
-          rel="noreferrer"
-          style={link}
-        >
-          View Code →
-        </a>
-
-        <button onClick={handleDismiss} style={dismissBtn} title="Dismiss">
-          ✕
-        </button>
-      </div>
+      <span style={text}>
+        ✨ <strong>Aura Store</strong> is a demo portfolio site — built with React + Shopify Storefront API. No real orders processed.
+      </span>
+      <button onClick={handleDismiss} style={closeBtn} aria-label="Dismiss banner">
+        ✕
+      </button>
     </div>
   );
 }
 
-/* ================= STYLES ================= */
-
 const banner = {
-  background: "linear-gradient(135deg, #c2687a, #7d2a3c)",
+  background: "linear-gradient(90deg, #7d2a3c, #c2687a)",
   color: "#fff",
-  position: "sticky",
-  top: 0,
-  zIndex: 1100, // above navbar
-  width: "100%",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-};
-
-const inner = {
-  maxWidth: 1300,
-  margin: "0 auto",
-  padding: "10px 20px",
-  display: "flex",
-  alignItems: "center",
-  gap: 12,
-  flexWrap: "wrap",
-  fontSize: 13,
-};
-
-const icon = {
-  fontSize: 16,
-  flexShrink: 0,
-};
-
-const text = {
-  flex: 1,
-  minWidth: 200,
-  lineHeight: 1.5,
-};
-
-const link = {
-  color: "#fff",
-  textDecoration: "underline",
-  fontWeight: 600,
-  whiteSpace: "nowrap",
-  flexShrink: 0,
-};
-
-const dismissBtn = {
-  background: "rgba(255,255,255,0.15)",
-  border: "none",
-  color: "#fff",
-  cursor: "pointer",
-  width: 26,
-  height: 26,
-  borderRadius: "50%",
+  padding: "10px 16px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 12,
-  flexShrink: 0,
+  gap: 16,
+  fontSize: 13,
+  position: "relative",
+  textAlign: "center",
+};
+
+const text = {
+  flex: "0 1 auto",
+};
+
+const closeBtn = {
+  background: "transparent",
+  border: "none",
+  color: "#fff",
+  cursor: "pointer",
+  fontSize: 16,
+  padding: "4px 8px",
+  position: "absolute",
+  right: 8,
+  top: "50%",
+  transform: "translateY(-50%)",
+  opacity: 0.8,
 };

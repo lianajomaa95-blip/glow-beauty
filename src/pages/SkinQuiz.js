@@ -2,6 +2,7 @@
 //
 // Beautiful chat-style skincare quiz with animated transitions,
 // progress bar, branching logic, and smart scoring.
+// Aura Store branded.
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +49,6 @@ export default function SkinQuiz({ setRecommended }) {
       answer: option.value,
     });
 
-    // Move to next question after brief pause for visual feedback
     setTimeout(() => {
       if (currentStep < totalQuestions - 1) {
         setCurrentStep(currentStep + 1);
@@ -64,7 +64,7 @@ export default function SkinQuiz({ setRecommended }) {
       setMultiSelectBuffer(multiSelectBuffer.filter((v) => v !== option.value));
     } else {
       if (multiSelectBuffer.length >= (currentQuestion.maxSelect || 3)) {
-        return; // Max reached
+        return;
       }
       setMultiSelectBuffer([...multiSelectBuffer, option.value]);
     }
@@ -105,11 +105,14 @@ export default function SkinQuiz({ setRecommended }) {
   const finishQuiz = (finalAnswers) => {
     const profile = computeScores(finalAnswers);
 
-    // Save to localStorage
     try {
       localStorage.setItem(
         "skinProfile",
-        JSON.stringify({ profile, answers: finalAnswers, completedAt: new Date().toISOString() })
+        JSON.stringify({
+          profile,
+          answers: finalAnswers,
+          completedAt: new Date().toISOString(),
+        })
       );
     } catch (e) {
       console.error("Failed to save skin profile:", e);
@@ -121,17 +124,19 @@ export default function SkinQuiz({ setRecommended }) {
       routine_level: profile.routineLevel,
     });
 
-    // Navigate to results page
     navigate("/quiz-results");
   };
 
   /* ============================================================
-     🎬 RENDER: Welcome Screen
+     RENDER: Welcome Screen
      ============================================================ */
   if (!started) {
     return (
       <>
-        <SEO title="Skin Quiz" description="Take our personalized skin quiz to discover your perfect skincare routine." />
+        <SEO
+          title="Skin Quiz"
+          description="Take our personalized skin quiz to discover your perfect skincare routine at Aura Store."
+        />
         <div style={page}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -144,6 +149,7 @@ export default function SkinQuiz({ setRecommended }) {
             <h1 style={welcomeTitle}>
               Discover Your <span style={italic}>Perfect</span> Routine
             </h1>
+            <p style={brandTag}>Powered by the Aura Store consultation</p>
             <p style={welcomeSubtitle}>
               Answer 7 quick questions and we'll create a personalized skincare
               plan tailored to your skin type, concerns, and lifestyle.
@@ -180,11 +186,14 @@ export default function SkinQuiz({ setRecommended }) {
   }
 
   /* ============================================================
-     💬 RENDER: Chat / Quiz Interface
+     RENDER: Chat / Quiz Interface
      ============================================================ */
   return (
     <>
-      <SEO title="Skin Quiz" description="Personalized skincare consultation" />
+      <SEO
+        title="Skin Quiz"
+        description="Personalized skincare consultation at Aura Store"
+      />
       <div style={page}>
         {/* PROGRESS BAR */}
         <div style={progressContainer}>
@@ -215,10 +224,10 @@ export default function SkinQuiz({ setRecommended }) {
               transition={{ duration: 0.5, ease: "easeOut" }}
               style={questionCard}
             >
-              {/* AI AVATAR + LABEL */}
+              {/* AVATAR + LABEL */}
               <div style={aiHeader}>
                 <div style={aiAvatar}>✨</div>
-                <span style={aiLabel}>GlowSkin Consultant</span>
+                <span style={aiLabel}>Aura Consultant</span>
               </div>
 
               {/* QUESTION */}
@@ -276,7 +285,9 @@ export default function SkinQuiz({ setRecommended }) {
                       ...continueBtn,
                       opacity: multiSelectBuffer.length === 0 ? 0.4 : 1,
                       cursor:
-                        multiSelectBuffer.length === 0 ? "not-allowed" : "pointer",
+                        multiSelectBuffer.length === 0
+                          ? "not-allowed"
+                          : "pointer",
                     }}
                   >
                     Continue →
@@ -301,7 +312,7 @@ export default function SkinQuiz({ setRecommended }) {
 }
 
 /* ============================================================
-   🎨 STYLES
+   STYLES
    ============================================================ */
 
 const page = {
@@ -345,12 +356,21 @@ const welcomeTitle = {
   fontSize: "clamp(28px, 4vw, 38px)",
   fontWeight: 700,
   color: theme.colors.dark,
-  margin: "0 0 16px",
+  margin: "0 0 8px",
   lineHeight: 1.2,
   letterSpacing: "-0.02em",
 };
 
 const italic = { fontStyle: "italic", fontWeight: 400 };
+
+const brandTag = {
+  fontSize: 11,
+  letterSpacing: "0.25em",
+  color: theme.colors.primary,
+  textTransform: "uppercase",
+  fontWeight: 600,
+  margin: "0 0 18px",
+};
 
 const welcomeSubtitle = {
   fontSize: 15,

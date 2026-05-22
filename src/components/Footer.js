@@ -1,5 +1,3 @@
-// src/components/Footer.js
-
 import { Link } from "react-router-dom";
 import { FaWhatsapp, FaInstagram, FaEnvelope } from "react-icons/fa";
 
@@ -7,145 +5,65 @@ export default function Footer() {
   return (
     <footer style={footer}>
       <div style={container}>
-        {/* BRAND COLUMN */}
         <div>
-          <h3 style={brandName}>GlowSkin</h3>
+          <h3 style={brandName}>Aura Store</h3>
           <p style={tagline}>
-            Curated luxury skincare from the world's most trusted dermatological
-            brands.
+            Curated luxury skincare from the world's most trusted dermatological brands.
           </p>
           <div style={socials}>
-            <a
-              href="https://wa.me/96176809185"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="WhatsApp"
-              style={socialIcon}
-            >
+            <a href="https://wa.me/96176809185" target="_blank" rel="noreferrer" aria-label="WhatsApp" style={socialIcon}>
               <FaWhatsapp />
             </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              style={socialIcon}
-            >
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" style={socialIcon}>
               <FaInstagram />
             </a>
-            <a
-              href="mailto:lianajomaa95@gmail.com"
-              aria-label="Email"
-              style={socialIcon}
-            >
+            <a href="mailto:lianajomaa95@gmail.com" aria-label="Email" style={socialIcon}>
               <FaEnvelope />
             </a>
           </div>
         </div>
 
-        {/* SHOP COLUMN */}
         <div>
           <h4 style={columnTitle}>Shop</h4>
           <ul style={linkList}>
-            <li>
-              <Link to="/shop" style={linkStyle}>
-                All Products
-              </Link>
-            </li>
-            <li>
-              <Link to="/best-sellers" style={linkStyle}>
-                Best Sellers
-              </Link>
-            </li>
-            <li>
-              <Link to="/under-30" style={linkStyle}>
-                Under $30
-              </Link>
-            </li>
-            <li>
-              <Link to="/premium" style={linkStyle}>
-                Premium
-              </Link>
-            </li>
-            <li>
-              <Link to="/brands" style={linkStyle}>
-                Brands
-              </Link>
-            </li>
-            <li>
-              <Link to="/skincare" style={linkStyle}>
-                Skincare Hub
-              </Link>
-            </li>
+            <li><Link to="/shop" style={linkStyle}>All Products</Link></li>
+            <li><Link to="/best-sellers" style={linkStyle}>Best Sellers</Link></li>
+            <li><Link to="/under-30" style={linkStyle}>Under $30</Link></li>
+            <li><Link to="/premium" style={linkStyle}>Premium</Link></li>
+            <li><Link to="/brands" style={linkStyle}>Brands</Link></li>
+            <li><Link to="/skincare" style={linkStyle}>Skincare Hub</Link></li>
           </ul>
         </div>
 
-        {/* SUPPORT COLUMN */}
         <div>
           <h4 style={columnTitle}>Support</h4>
           <ul style={linkList}>
-            <li>
-              <Link to="/contact" style={linkStyle}>
-                Contact Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/shipping" style={linkStyle}>
-                Shipping
-              </Link>
-            </li>
-            <li>
-              <Link to="/returns" style={linkStyle}>
-                Returns
-              </Link>
-            </li>
-            <li>
-              <Link to="/faq" style={linkStyle}>
-                FAQ
-              </Link>
-            </li>
+            <li><Link to="/contact" style={linkStyle}>Contact Us</Link></li>
+            <li><Link to="/shipping" style={linkStyle}>Shipping</Link></li>
+            <li><Link to="/returns" style={linkStyle}>Returns</Link></li>
+            <li><Link to="/faq" style={linkStyle}>FAQ</Link></li>
           </ul>
         </div>
 
-        {/* ABOUT COLUMN */}
         <div>
           <h4 style={columnTitle}>About</h4>
           <ul style={linkList}>
-            <li>
-              <Link to="/about" style={linkStyle}>
-                Our Story
-              </Link>
-            </li>
-            <li>
-              <Link to="/skin-quiz" style={linkStyle}>
-                Skin Quiz
-              </Link>
-            </li>
-            <li>
-              <Link to="/routine" style={linkStyle}>
-                Routine Builder
-              </Link>
-            </li>
-            <li>
-              <Link to="/privacy" style={linkStyle}>
-                Privacy
-              </Link>
-            </li>
+            <li><Link to="/about" style={linkStyle}>Our Story</Link></li>
+            <li><Link to="/skin-quiz" style={linkStyle}>Skin Quiz</Link></li>
+            <li><Link to="/routine" style={linkStyle}>Routine Builder</Link></li>
+            <li><Link to="/privacy" style={linkStyle}>Privacy</Link></li>
           </ul>
         </div>
       </div>
 
       <div style={bottomBar}>
         <p style={bottomText}>
-          © {new Date().getFullYear()} GlowSkin · Demo portfolio · Built with
-          React + Shopify
+          © {new Date().getFullYear()} Aura Store · Demo portfolio · Built with React + Shopify
         </p>
       </div>
     </footer>
   );
 }
-
-/* ================= STYLES ================= */
 
 const footer = {
   background: "#1a1419",
@@ -169,6 +87,7 @@ const brandName = {
   fontWeight: 700,
   margin: "0 0 12px",
   color: "#fff",
+  letterSpacing: "0.05em",
 };
 
 const tagline = {
