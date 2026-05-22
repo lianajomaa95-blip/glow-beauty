@@ -25,6 +25,7 @@ import ProductPage from "./pages/ProductPage";
 import Wishlist from "./pages/Wishlist";
 import Collections from "./pages/Collections";
 import CollectionPage from "./pages/CollectionPage";
+import SpecialCollection from "./pages/SpecialCollection";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Contact from "./pages/Contact";
@@ -216,6 +217,39 @@ export default function App() {
               />
             }
           />
+
+          {/* 💎 SPECIAL COLLECTIONS */}
+          <Route
+            path="/best-sellers"
+            element={
+              <SpecialCollection
+                addToCart={addToCart}
+                wishlist={wishlist}
+                toggleWishlist={toggleWishlist}
+              />
+            }
+          />
+          <Route
+            path="/under-30"
+            element={
+              <SpecialCollection
+                addToCart={addToCart}
+                wishlist={wishlist}
+                toggleWishlist={toggleWishlist}
+              />
+            }
+          />
+          <Route
+            path="/premium"
+            element={
+              <SpecialCollection
+                addToCart={addToCart}
+                wishlist={wishlist}
+                toggleWishlist={toggleWishlist}
+              />
+            }
+          />
+
           <Route
             path="/product/:id"
             element={

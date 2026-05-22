@@ -1,166 +1,145 @@
-import { useNavigate } from "react-router-dom";
-import { FaWhatsapp, FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
-import { theme } from "../theme";
+// src/components/Footer.js
+
+import { Link } from "react-router-dom";
+import { FaWhatsapp, FaInstagram, FaEnvelope } from "react-icons/fa";
 
 export default function Footer() {
-  const navigate = useNavigate();
-  const year = new Date().getFullYear();
-
-  const go = (path) => navigate(path);
-
   return (
     <footer style={footer}>
       <div style={container}>
-        {/* TOP — 4 COLUMNS */}
-        <div style={grid}>
-          {/* BRAND */}
-          <div>
-            <h2 style={brandTitle}>GlowSkin</h2>
-            <p style={tagline}>
-              Curated skincare for every skin type. Dermatologist-approved
-              formulas from the world's most trusted brands.
-            </p>
-            <div style={socials}>
-              <a
-                href="https://wa.me/96176809185"
-                target="_blank"
-                rel="noreferrer"
-                style={socialIcon}
-                title="WhatsApp"
-              >
-                <FaWhatsapp />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                style={socialIcon}
-                title="Instagram"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                style={socialIcon}
-                title="Facebook"
-              >
-                <FaFacebook />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                style={socialIcon}
-                title="Twitter"
-              >
-                <FaTwitter />
-              </a>
-            </div>
-          </div>
-
-          {/* SHOP */}
-          <div>
-            <h4 style={columnTitle}>Shop</h4>
-            <ul style={list}>
-              <li>
-                <button style={link} onClick={() => go("/skincare")}>
-                  Skincare
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/brands")}>
-                  Brands
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/shop")}>
-                  All Products
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/collections")}>
-                  Collections
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/wishlist")}>
-                  Wishlist
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* HELP */}
-          <div>
-            <h4 style={columnTitle}>Help</h4>
-            <ul style={list}>
-              <li>
-                <button style={link} onClick={() => go("/contact")}>
-                  Contact Us
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/faq")}>
-                  FAQ
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/shipping")}>
-                  Shipping Info
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/returns")}>
-                  Returns & Refunds
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/orders")}>
-                  Track Order
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* COMPANY */}
-          <div>
-            <h4 style={columnTitle}>Company</h4>
-            <ul style={list}>
-              <li>
-                <button style={link} onClick={() => go("/about")}>
-                  About Us
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/privacy")}>
-                  Privacy Policy
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/skin-quiz")}>
-                  Skin Quiz
-                </button>
-              </li>
-              <li>
-                <button style={link} onClick={() => go("/routine")}>
-                  Routine Builder
-                </button>
-              </li>
-            </ul>
+        {/* BRAND COLUMN */}
+        <div>
+          <h3 style={brandName}>GlowSkin</h3>
+          <p style={tagline}>
+            Curated luxury skincare from the world's most trusted dermatological
+            brands.
+          </p>
+          <div style={socials}>
+            <a
+              href="https://wa.me/96176809185"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="WhatsApp"
+              style={socialIcon}
+            >
+              <FaWhatsapp />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              style={socialIcon}
+            >
+              <FaInstagram />
+            </a>
+            <a
+              href="mailto:lianajomaa95@gmail.com"
+              aria-label="Email"
+              style={socialIcon}
+            >
+              <FaEnvelope />
+            </a>
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
-        <div style={bottomBar}>
-          <p style={copyright}>
-            © {year} GlowSkin. All rights reserved.
-          </p>
-          <p style={builtBy}>
-            🌸 Demo portfolio project · Built with React + Shopify
-          </p>
+        {/* SHOP COLUMN */}
+        <div>
+          <h4 style={columnTitle}>Shop</h4>
+          <ul style={linkList}>
+            <li>
+              <Link to="/shop" style={linkStyle}>
+                All Products
+              </Link>
+            </li>
+            <li>
+              <Link to="/best-sellers" style={linkStyle}>
+                Best Sellers
+              </Link>
+            </li>
+            <li>
+              <Link to="/under-30" style={linkStyle}>
+                Under $30
+              </Link>
+            </li>
+            <li>
+              <Link to="/premium" style={linkStyle}>
+                Premium
+              </Link>
+            </li>
+            <li>
+              <Link to="/brands" style={linkStyle}>
+                Brands
+              </Link>
+            </li>
+            <li>
+              <Link to="/skincare" style={linkStyle}>
+                Skincare Hub
+              </Link>
+            </li>
+          </ul>
         </div>
+
+        {/* SUPPORT COLUMN */}
+        <div>
+          <h4 style={columnTitle}>Support</h4>
+          <ul style={linkList}>
+            <li>
+              <Link to="/contact" style={linkStyle}>
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <Link to="/shipping" style={linkStyle}>
+                Shipping
+              </Link>
+            </li>
+            <li>
+              <Link to="/returns" style={linkStyle}>
+                Returns
+              </Link>
+            </li>
+            <li>
+              <Link to="/faq" style={linkStyle}>
+                FAQ
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* ABOUT COLUMN */}
+        <div>
+          <h4 style={columnTitle}>About</h4>
+          <ul style={linkList}>
+            <li>
+              <Link to="/about" style={linkStyle}>
+                Our Story
+              </Link>
+            </li>
+            <li>
+              <Link to="/skin-quiz" style={linkStyle}>
+                Skin Quiz
+              </Link>
+            </li>
+            <li>
+              <Link to="/routine" style={linkStyle}>
+                Routine Builder
+              </Link>
+            </li>
+            <li>
+              <Link to="/privacy" style={linkStyle}>
+                Privacy
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style={bottomBar}>
+        <p style={bottomText}>
+          © {new Date().getFullYear()} GlowSkin · Demo portfolio · Built with
+          React + Shopify
+        </p>
       </div>
     </footer>
   );
@@ -169,71 +148,65 @@ export default function Footer() {
 /* ================= STYLES ================= */
 
 const footer = {
-  background: theme.colors.card,
-  borderTop: `1px solid ${theme.colors.border}`,
-  marginTop: 40,
-  paddingBottom: 80, // extra padding so WhatsApp button doesn't overlap
+  background: "#1a1419",
+  color: "#fff",
+  padding: "60px 24px 30px",
+  marginTop: 60,
 };
 
 const container = {
   maxWidth: 1200,
   margin: "0 auto",
-  padding: "50px 24px 20px",
-};
-
-const grid = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
   gap: 40,
   marginBottom: 40,
 };
 
-const brandTitle = {
-  fontSize: 24,
+const brandName = {
+  fontFamily: "'Playfair Display', serif",
+  fontSize: 28,
   fontWeight: 700,
-  color: theme.colors.dark,
-  margin: 0,
+  margin: "0 0 12px",
+  color: "#fff",
 };
 
 const tagline = {
   fontSize: 13,
-  color: theme.colors.muted,
   lineHeight: 1.6,
-  marginTop: 12,
-  marginBottom: 18,
+  opacity: 0.7,
+  marginBottom: 20,
 };
 
 const socials = {
   display: "flex",
-  gap: 10,
+  gap: 12,
 };
 
 const socialIcon = {
-  width: 38,
-  height: 38,
+  width: 36,
+  height: 36,
   borderRadius: "50%",
-  background: theme.colors.bg,
-  border: `1px solid ${theme.colors.border}`,
+  background: "rgba(255,255,255,0.08)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: theme.colors.primary,
+  color: "#fff",
   fontSize: 16,
   textDecoration: "none",
-  transition: "0.2s ease",
 };
 
 const columnTitle = {
-  fontSize: 13,
+  fontSize: 11,
   fontWeight: 700,
+  letterSpacing: "0.25em",
   textTransform: "uppercase",
-  letterSpacing: 1,
-  color: theme.colors.dark,
-  marginBottom: 16,
+  color: "#fff",
+  marginBottom: 18,
   marginTop: 0,
 };
 
-const list = {
+const linkList = {
   listStyle: "none",
   padding: 0,
   margin: 0,
@@ -242,36 +215,22 @@ const list = {
   gap: 10,
 };
 
-const link = {
-  background: "none",
-  border: "none",
-  color: theme.colors.muted,
-  cursor: "pointer",
-  fontSize: 13,
-  padding: 0,
-  textAlign: "left",
-  transition: "color 0.2s ease",
-  fontFamily: "inherit",
+const linkStyle = {
+  color: "rgba(255,255,255,0.7)",
+  textDecoration: "none",
+  fontSize: 14,
 };
 
 const bottomBar = {
-  borderTop: `1px solid ${theme.colors.border}`,
-  paddingTop: 20,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  flexWrap: "wrap",
-  gap: 10,
+  maxWidth: 1200,
+  margin: "0 auto",
+  paddingTop: 24,
+  borderTop: "1px solid rgba(255,255,255,0.1)",
+  textAlign: "center",
 };
 
-const copyright = {
+const bottomText = {
   fontSize: 12,
-  color: theme.colors.muted,
-  margin: 0,
-};
-
-const builtBy = {
-  fontSize: 11,
-  color: theme.colors.muted,
+  opacity: 0.5,
   margin: 0,
 };

@@ -4,6 +4,12 @@ import { useCollections } from "../hooks/useCollections";
 import useDarkMode from "../hooks/useDarkMode";
 import { theme } from "../theme";
 
+const SPECIAL_LINKS = [
+  { label: "💎 Best Sellers", path: "/best-sellers" },
+  { label: "💰 Under $30", path: "/under-30" },
+  { label: "✨ Premium", path: "/premium" },
+];
+
 export default function Navbar({ cart, wishlist, onCartClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [skincareDropdown, setSkincareDropdown] = useState(false);
@@ -65,10 +71,24 @@ export default function Navbar({ cart, wishlist, onCartClick }) {
 
             {skincareDropdown && (
               <div style={dropdown} role="menu">
+                {/* SPECIAL COLLECTIONS SECTION */}
+                <div style={dropdownHeader}>SHOP THE EDIT</div>
+                {SPECIAL_LINKS.map((link) => (
+                  <button
+                    key={link.path}
+                    onClick={() => go(link.path)}
+                    style={dropdownItem}
+                    role="menuitem"
+                  >
+                    {link.label}
+                  </button>
+                ))}
+
+                <div style={dropdownDivider} />
+
+                {/* CATEGORIES SECTION */}
                 <div style={dropdownHeader}>SHOP BY CATEGORY</div>
-                {loading && (
-                  <div style={dropdownLoading}>Loading...</div>
-                )}
+                {loading && <div style={dropdownLoading}>Loading...</div>}
                 {!loading &&
                   collections.map((col) => (
                     <button
@@ -80,6 +100,7 @@ export default function Navbar({ cart, wishlist, onCartClick }) {
                       {col.name}
                     </button>
                   ))}
+
                 <div style={dropdownDivider} />
                 <button
                   onClick={() => go("/skincare")}
@@ -171,6 +192,18 @@ export default function Navbar({ cart, wishlist, onCartClick }) {
         <MenuItem label="✨ Skincare Hub" onClick={() => go("/skincare")} />
         <MenuItem label="🛍️ Shop All" onClick={() => go("/shop")} />
         <MenuItem label="🏷️ Brands" onClick={() => go("/brands")} />
+
+        <hr style={hr} />
+
+        <div style={sectionLabel}>Shop the Edit</div>
+
+        {SPECIAL_LINKS.map((link) => (
+          <MenuItem
+            key={link.path}
+            label={link.label}
+            onClick={() => go(link.path)}
+          />
+        ))}
 
         <hr style={hr} />
 
@@ -295,7 +328,7 @@ const dropdown = {
   borderRadius: 14,
   boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
   padding: 8,
-  minWidth: 220,
+  minWidth: 240,
   zIndex: 1001,
 };
 

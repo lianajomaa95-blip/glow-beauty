@@ -1,294 +1,321 @@
+// src/pages/Shop.js
+//
+// Full product grid with smart filter pills (All / Best Sellers / Under $30 / Premium)
+
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { ProductGridSkeleton } from "../components/Skeleton";
-import useProducts from "../hooks/useProducts";
-import useDebounce from "../hooks/useDebounce";
-import { useCollections } from "../hooks/useCollections";
 import SEO from "../components/SEO";
+import useProducts from "../hooks/useProducts";
+import {
+  getBestSellers,
+  getUnder30,
+  getPremium,
+} from "../utils/specialCollections";
 import { theme } from "../theme";
 
+const FILTERS = [
+  { id: "all", label: "All Products", icon: "🛍️" },
+  { id: "best-sellers", label: "Best Sellers", icon: "💎" },
+  { id: "under-30", label: "Under $30", icon: "💰" },
+  { id: "premium", label: "Premium", icon: "✨" },
+];
 
-export default function Shop({ addToCart, wishlist, toggleWishlist }) {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 300); // ⏱ smooth typing
-
-  const [activeFilters, setActiveFilters] = useState({
-    brand: "All",
-    type: "All",
-  });
+export default function Shop({
+  addToCart,
+  wishlist,
+  toggleWishlist,
+}) {
+  const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const { products, loading, error } = useProducts();
-  const { collections } = useCollections();
 
-  const brands = useMemo(() => {
-    const unique = Array.from(
-      new Set(products.map((p) => p.brand).filter(Boolean))
-    );
-    return ["All", ...unique];
-  }, [products]);
+  const displayed = useMemo(() => {
+    if (!Array.isArray(products) || products.length === 0) return [];
 
-  const types = useMemo(() => {
-    const unique = Array.from(
-      new Set(products.map((p) => p.type).filter(Boolean))
-    );
-    return ["All", ...unique];
-  }, [products]);
-
-  const filtered = useMemo(() => {
-    const q = debouncedSearch.toLowerCase().trim();
-
-    return products.filter((p) => {
-      const matchesSearch =
-        !q ||
-        p.name?.toLowerCase().includes(q) ||
-        p.brand?.toLowerCase().includes(q) ||
-        p.type?.toLowerCase().includes(q) ||
-        (Array.isArray(p.concerns) &&
-          p.concerns.join(" ").toLowerCase().includes(q));
-
-      const matchesBrand =
-        activeFilters.brand === "All" ||
-        p.brand === activeFilters.brand;
-
-      const matchesType =
-        activeFilters.type === "All" ||
-        p.type === activeFilters.type;
-
-      return matchesSearch && matchesBrand && matchesType;
-    });
-  }, [debouncedSearch, activeFilters, products]);
+    switch (activeFilter) {
+      case "best-sellers":
+        return getBestSellers(products, 24);
+      case "under-30":
+        return getUnder30(products);
+      case "premium":
+        return getPremium(products);
+      default:
+        return products.filter((p) => p.available !== false);
+    }
+  }, [products, activeFilter]);
 
   return (
-    <div style={page}>
-      <SEO title="Shop" description="Browse our full collection of luxury skincare products from Avène, La Roche-Posay, and more. Find your perfect routine." />
-      {/* HEADER */}
-      <div style={header}>
-        <h1 style={title}>Discover Skincare ✨</h1>
-        <p style={subtitle}>
-          Curated luxury skincare for every skin type
-        </p>
-      </div>
+    <>
+      <SEO
+        title="Shop"
+        description="Browse our full collection of luxury skincare from Avène, La Roche-Posay, and more."
+      />
 
-      {/* SEARCH */}
-      <div style={searchBox}>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search products, brands, concerns..."
-          style={input}
-        />
-        {search && (
-          <button onClick={() => setSearch("")} style={clearBtn}>
-            ✕
-          </button>
+      <div style={page}>
+        {/* HEADER */}
+        <div style={header}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span style={eyebrow}>SHOP</span>
+            <h1 style={title}>
+              All <span style={italic}>Products</span>
+            </h1>
+            <p style={subtitle}>
+              Discover our complete collection of luxury skincare
+            </p>
+          </motion.div>
+        </div>
+
+        {/* FILTER PILLS */}
+        <div style={filtersWrap}>
+          <div style={filtersInner}>
+            {FILTERS.map((filter) => {
+              const isActive = activeFilter === filter.id;
+              return (
+                <button
+                  key={filter.id}
+                  onClick={() => setActiveFilter(filter.id)}
+                  style={{
+                    ...pill,
+                    ...(isActive ? pillActive : {}),
+                  }}
+                >
+                  <span style={pillIcon}>{filter.icon}</span>
+                  <span>{filter.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* RESULTS COUNT */}
+        {!loading && !error && (
+          <div style={countWrap}>
+            <p style={countText}>
+              Showing <strong>{displayed.length}</strong>{" "}
+              {displayed.length === 1 ? "product" : "products"}
+              {activeFilter !== "all" && (
+                <span style={countFilter}>
+                  {" "}
+                  in{" "}
+                  <strong style={{ color: theme.colors.primary }}>
+                    {FILTERS.find((f) => f.id === activeFilter)?.label}
+                  </strong>
+                </span>
+              )}
+            </p>
+          </div>
         )}
-      </div>
 
-      {/* COLLECTIONS QUICK ACCESS */}
-      {collections.length > 0 && (
-        <div style={group}>
-          <span style={label}>Collections</span>
-          <div style={pills}>
-            {collections.map((col) => (
-              <button
-                key={col.id}
-                onClick={() =>
-                  (window.location.href = `/collection/${col.handle}`)
-                }
-                style={pill(false)}
-              >
-                {col.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+        {/* PRODUCT GRID */}
+        <div style={gridWrap}>
+          {loading && <ProductGridSkeleton count={8} />}
 
-      {/* FILTERS */}
-      <div style={filtersRow}>
-        <div style={group}>
-          <span style={label}>Brand</span>
-          <div style={pills}>
-            {brands.map((b) => (
-              <button
-                key={b}
-                onClick={() =>
-                  setActiveFilters((f) => ({ ...f, brand: b }))
-                }
-                style={pill(activeFilters.brand === b)}
-              >
-                {b}
-              </button>
-            ))}
-          </div>
-        </div>
+          {error && (
+            <div style={errorBox}>
+              <p>Couldn't load products. Please try again.</p>
+            </div>
+          )}
 
-        <div style={group}>
-          <span style={label}>Type</span>
-          <div style={pills}>
-            {types.map((t) => (
+          {!loading && !error && displayed.length === 0 && (
+            <div style={emptyBox}>
+              <div style={{ fontSize: 50, marginBottom: 12 }}>🔍</div>
+              <h3 style={{ marginBottom: 8, color: theme.colors.dark }}>
+                No products in this collection
+              </h3>
+              <p style={{ color: theme.colors.muted, marginBottom: 20 }}>
+                Try another filter or browse all products.
+              </p>
               <button
-                key={t}
-                onClick={() =>
-                  setActiveFilters((f) => ({ ...f, type: t }))
-                }
-                style={pill(activeFilters.type === t)}
+                onClick={() => setActiveFilter("all")}
+                style={resetBtn}
               >
-                {t}
+                Show All Products
               </button>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {!loading && !error && displayed.length > 0 && (
+            <motion.div
+              key={activeFilter}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              style={grid}
+            >
+              {displayed.map((product, i) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(i * 0.03, 0.5), duration: 0.4 }}
+                >
+                  <ProductCard
+                    product={product}
+                    onAdd={addToCart}
+                    wishlist={wishlist}
+                    toggleWishlist={toggleWishlist}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </div>
-
-      {/* RESULT COUNT */}
-      {!loading && !error && (
-        <div style={resultCount}>
-          {filtered.length}{" "}
-          {filtered.length === 1 ? "product" : "products"} found
-        </div>
-      )}
-
-      {/* 💀 SKELETON LOADERS */}
-      {loading && <ProductGridSkeleton count={8} />}
-
-      {error && (
-        <div style={empty}>
-          <div style={{ fontSize: "40px" }}>⚠️</div>
-          <h3>Couldn't load products</h3>
-          <p>Please check your connection and try again.</p>
-        </div>
-      )}
-
-      {!loading && !error && filtered.length === 0 && (
-        <div style={empty}>
-          <div style={{ fontSize: "40px" }}>🧴</div>
-          <h3>No products found</h3>
-          <p>Try changing filters or search</p>
-        </div>
-      )}
-
-      {!loading && !error && filtered.length > 0 && (
-        <div style={grid}>
-          {filtered.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              onAdd={addToCart}
-              wishlist={wishlist}
-              toggleWishlist={toggleWishlist}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
-/* ================= STYLES ================= */
+/* ============================================================
+   🎨 STYLES
+   ============================================================ */
 
 const page = {
   background: theme.colors.bg,
   minHeight: "100vh",
-  padding: "28px",
 };
 
-const header = { marginBottom: "18px" };
+const header = {
+  background: theme.colors.card,
+  padding: "60px 24px 40px",
+  textAlign: "center",
+  borderBottom: `1px solid ${theme.colors.border}`,
+};
+
+const eyebrow = {
+  display: "inline-block",
+  fontSize: 11,
+  letterSpacing: "0.3em",
+  fontWeight: 600,
+  color: theme.colors.primary,
+  marginBottom: 14,
+  textTransform: "uppercase",
+};
 
 const title = {
-  fontSize: "28px",
-  fontWeight: "700",
+  fontFamily: "'Playfair Display', serif",
+  fontSize: "clamp(36px, 5vw, 52px)",
+  fontWeight: 700,
   color: theme.colors.dark,
+  margin: 0,
+  letterSpacing: "-0.02em",
 };
+
+const italic = { fontStyle: "italic", fontWeight: 400 };
 
 const subtitle = {
-  color: theme.colors.primary,
-  fontSize: "14px",
-  marginTop: "4px",
+  fontSize: 15,
+  color: theme.colors.muted,
+  marginTop: 14,
 };
 
-const searchBox = {
-  marginBottom: "18px",
-  position: "relative",
+/* FILTERS */
+const filtersWrap = {
+  position: "sticky",
+  top: 64,
+  zIndex: 50,
+  background: theme.colors.bg,
+  borderBottom: `1px solid ${theme.colors.border}`,
+  padding: "16px 0",
 };
 
-const input = {
-  width: "100%",
-  padding: "12px 40px 12px 16px",
-  borderRadius: theme.radius.button,
-  border: `1px solid ${theme.colors.border}`,
-  outline: "none",
-  background: theme.colors.card,
-  boxShadow: theme.shadow.card,
-  boxSizing: "border-box",
-};
-
-const clearBtn = {
-  position: "absolute",
-  right: 14,
-  top: "50%",
-  transform: "translateY(-50%)",
-  background: "transparent",
-  border: "none",
-  cursor: "pointer",
-  fontSize: 16,
-  color: "#999",
-};
-
-const filtersRow = {
+const filtersInner = {
+  maxWidth: 1200,
+  margin: "0 auto",
+  padding: "0 20px",
   display: "flex",
-  flexDirection: "column",
-  gap: "14px",
-  marginBottom: "24px",
-};
-
-const group = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "8px",
-  marginBottom: "14px",
-};
-
-const label = {
-  fontSize: "12px",
-  fontWeight: "600",
-  color: theme.colors.dark,
-};
-
-const pills = {
-  display: "flex",
+  gap: 10,
   flexWrap: "wrap",
-  gap: "10px",
+  justifyContent: "center",
 };
 
-const pill = (active) => ({
-  padding: "8px 14px",
-  borderRadius: theme.radius.button,
+const pill = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "10px 20px",
+  background: theme.colors.card,
   border: `1px solid ${theme.colors.border}`,
-  background: active ? theme.colors.primary : theme.colors.card,
-  color: active ? "#fff" : theme.colors.dark,
+  borderRadius: 999,
   cursor: "pointer",
-  fontSize: "13px",
-  transition: "0.2s ease",
-});
+  fontSize: 13,
+  fontWeight: 600,
+  color: theme.colors.dark,
+  transition: "all 0.25s ease",
+  fontFamily: "inherit",
+};
 
-const resultCount = {
-  fontSize: 12,
-  color: "#888",
-  marginBottom: 14,
+const pillActive = {
+  background: theme.colors.dark,
+  color: "#fff",
+  borderColor: theme.colors.dark,
+  transform: "translateY(-1px)",
+  boxShadow: "0 4px 14px rgba(125,42,60,0.25)",
+};
+
+const pillIcon = {
+  fontSize: 14,
+};
+
+/* COUNT */
+const countWrap = {
+  maxWidth: 1200,
+  margin: "0 auto",
+  padding: "16px 24px 0",
+};
+
+const countText = {
+  fontSize: 13,
+  color: theme.colors.muted,
+  margin: 0,
+};
+
+const countFilter = {
+  fontSize: 13,
+};
+
+/* GRID */
+const gridWrap = {
+  maxWidth: 1200,
+  margin: "0 auto",
+  padding: "20px 24px 60px",
 };
 
 const grid = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-  gap: "18px",
+  gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+  gap: 20,
 };
 
-const empty = {
+const errorBox = {
   textAlign: "center",
-  padding: "60px 20px",
+  padding: 40,
+  color: "#c33",
+};
+
+const emptyBox = {
+  textAlign: "center",
+  padding: "80px 20px",
   background: theme.colors.card,
-  borderRadius: theme.radius.card,
-  border: `1px solid ${theme.colors.border}`,
-  boxShadow: theme.shadow.card,
+  borderRadius: 16,
+};
+
+const resetBtn = {
+  padding: "12px 24px",
+  background: theme.colors.dark,
+  color: "#fff",
+  border: "none",
+  borderRadius: 12,
+  cursor: "pointer",
+  fontSize: 13,
+  fontWeight: 600,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
 };
