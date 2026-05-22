@@ -4,7 +4,6 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { ProductGridSkeleton } from "../components/Skeleton";
 import SEO from "../components/SEO";
@@ -28,7 +27,6 @@ export default function Shop({
   wishlist,
   toggleWishlist,
 }) {
-  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("all");
 
   const { products, loading, error } = useProducts();
